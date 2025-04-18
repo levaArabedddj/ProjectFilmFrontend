@@ -9,7 +9,8 @@ import DirectorDashboard from "@/components/DirectorDashboard.vue";
 import { jwtDecode } from "jwt-decode";
 import Home from '@/views/Home.vue'; // Добавили главную страницу
 import MainPageDirector from '@/components/MainPageDirector.vue';
-
+import CreateCasting from '@/components/CreateCasting.vue' 
+import CastingPanel from '@/page/CastingPanel.vue';
 
 const routes = [
   { path: '/', component: Home }, // Главная страница
@@ -19,7 +20,15 @@ const routes = [
   { path: "/actor-dashboard", component: ActorDashboard, meta: { role: "ACTOR" } },
   { path: '/director-dashboard/:id', name: 'DirectorDashboard', component: DirectorDashboard, meta: { role: "DIRECTOR" } },
   { path: "/crew-dashboard", component: CrewDashboard, meta: { role: "CREW_MEMBER" } },
-  { path: "/main-page-director", component: MainPageDirector }
+  { path: "/main-page-director", component: MainPageDirector },
+  { path: '/casting/create/:movieId', name: 'CreateCasting', component: CreateCasting, props: true}, // Добавили маршрут для создания кастинга
+  {
+    path: '/casting/dashboard/:movieId',
+    name: 'CastingPanel',
+    component: CastingPanel,
+    props: true,
+    meta: { role: 'DIRECTOR' }
+  },
 ];
 
 

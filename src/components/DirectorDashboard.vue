@@ -34,53 +34,63 @@
           <button class="edit-film-btn" @click="openFilmEditForm">Редагувати фільм</button>
         </div>
       </div>
+      <button class="add-casting-btn" @click="goToCreateCasting">
+      Додати кастинг
+      </button>
 
-      <!-- Блок Финансы -->
-      <div class="section-block">
-        <h2>Фінанси</h2>
-        <!-- Если финансы созданы и форма редактирования не открыта, показываем данные и кнопку редактирования -->
-        <div v-if="financeExists && !showFinanceUpdateForm">
-          <p><strong>Бюджет:</strong> {{ film.finance.budget || 'Немає' }}</p>
-          <p><strong>Зарплата акторів:</strong> {{ film.finance.actorsSalary || 'Немає' }}</p>
-          <p><strong>Зарплата команди:</strong> {{ film.finance.crewSalary || 'Немає' }}</p>
-          <p><strong>Витрати на рекламу:</strong> {{ film.finance.advertisingCost || 'Немає' }}</p>
-          <p><strong>Витрати на монтаж:</strong> {{ film.finance.editingCost || 'Немає' }}</p>
-          <p><strong>Витрати на обладнання:</strong> {{ film.finance.equipmentCost || 'Немає' }}</p>
-          <button class="edit-finance-btn" @click="openFinanceUpdateForm">Редагувати фінанси</button>
-        </div>
-        <!-- Если финансы не созданы или поле бюджет не заполнено, показываем возможность их создать -->
-<div v-else-if="!film.finance || !film.finance.budget">
-  <p>Фінанси не створені.</p>
-  <button class="add-finance-btn" @click="showFinanceForm = true">Додати фінанси</button>
-  
-  <!-- Форма создания финансов -->
-  <div v-if="showFinanceForm" class="finance-form">
-    <input v-model="newFinance.budget" placeholder="Бюджет" />
-    <input v-model="newFinance.actorsSalary" placeholder="Зарплата акторів" />
-    <input v-model="newFinance.crewSalary" placeholder="Зарплата команди" />
-    <input v-model="newFinance.advertisingCost" placeholder="Витрати на рекламу" />
-    <input v-model="newFinance.editingCost" placeholder="Витрати на монтаж" />
-    <input v-model="newFinance.equipmentCost" placeholder="Витрати на обладнання" />
+      <!-- Блок Финанси -->
+<div class="section-block">
+  <h2>Фінанси</h2>
+
+  <!-- Сообщение об ошибке, если оно есть -->
+  <div v-if="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Если финансы созданы и форма редактирования не открыта, показываем данные и кнопку редактирования -->
+  <div v-if="financeExists && !showFinanceUpdateForm">
+    <p><strong>Бюджет:</strong> {{ film.finance.budget || 'Немає' }}</p>
+    <p><strong>Зарплата акторів:</strong> {{ film.finance.actorsSalary || 'Немає' }}</p>
+    <p><strong>Зарплата команди:</strong> {{ film.finance.crewSalary || 'Немає' }}</p>
+    <p><strong>Витрати на рекламу:</strong> {{ film.finance.advertisingCost || 'Немає' }}</p>
+    <p><strong>Витрати на монтаж:</strong> {{ film.finance.editingCost || 'Немає' }}</p>
+    <p><strong>Витрати на обладнання:</strong> {{ film.finance.equipmentCost || 'Немає' }}</p>
+    <button class="edit-finance-btn" @click="openFinanceUpdateForm">Редагувати фінанси</button>
+  </div>
+
+  <!-- Если финансы не созданы или поле бюджет не заполнено, показываем возможность их создать -->
+  <div v-else-if="!film.finance || !film.finance.budget">
+    <p>Фінанси не створені.</p>
+    <button class="add-finance-btn" @click="showFinanceForm = true">Додати фінанси</button>
+    <!-- Форма создания финансов -->
+    <div v-if="showFinanceForm" class="finance-form">
+      <input v-model="newFinance.budget" placeholder="Бюджет" />
+      <input v-model="newFinance.actorsSalary" placeholder="Зарплата акторів" />
+      <input v-model="newFinance.crewSalary" placeholder="Зарплата команди" />
+      <input v-model="newFinance.advertisingCost" placeholder="Витрати на рекламу" />
+      <input v-model="newFinance.editingCost" placeholder="Витрати на монтаж" />
+      <input v-model="newFinance.equipmentCost" placeholder="Витрати на обладнання" />
+      <div class="form-buttons">
+        <button @click="createFinance">Зберегти</button>
+        <button @click="cancelFinance">Скасувати</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Форма обновления финансов (если открыта) -->
+  <div v-if="showFinanceUpdateForm" class="finance-form">
+    <input v-model="updateFinance.budget" placeholder="Бюджет" />
+    <input v-model="updateFinance.actorsSalary" placeholder="Зарплата акторів" />
+    <input v-model="updateFinance.crewSalary" placeholder="Зарплата команди" />
+    <input v-model="updateFinance.advertisingCost" placeholder="Витрати на рекламу" />
+    <input v-model="updateFinance.editingCost" placeholder="Витрати на монтаж" />
+    <input v-model="updateFinance.equipmentCost" placeholder="Витрати на обладнання" />
     <div class="form-buttons">
-      <button @click="createFinance">Зберегти</button>
-      <button @click="cancelFinance">Скасувати</button>
+      <button @click="updateFinanceData">Зберегти</button>
+      <button @click="cancelFinanceUpdate">Скасувати</button>
     </div>
   </div>
 </div>
-        <!-- Форма обновления финансов (если открыта) -->
-        <div v-if="showFinanceUpdateForm" class="finance-form">
-          <input v-model="updateFinance.budget" placeholder="Бюджет" />
-          <input v-model="updateFinance.actorsSalary" placeholder="Зарплата акторів" />
-          <input v-model="updateFinance.crewSalary" placeholder="Зарплата команди" />
-          <input v-model="updateFinance.advertisingCost" placeholder="Витрати на рекламу" />
-          <input v-model="updateFinance.editingCost" placeholder="Витрати на монтаж" />
-          <input v-model="updateFinance.equipmentCost" placeholder="Витрати на обладнання" />
-          <div class="form-buttons">
-            <button @click="updateFinanceData">Зберегти</button>
-            <button @click="cancelFinanceUpdate">Скасувати</button>
-          </div>
-        </div>
-      </div>
 
        <!-- Блок Съемочные дни --> 
 <div class="section-block">
@@ -158,6 +168,27 @@
   </div>
 </div>
 
+<div class="script-section">
+    <h2>Сценарій</h2>
+
+   <!-- Если сценарій уже загружен, показываем кнопку скачать и удалить -->
+  <div v-if="film.script && film.script.fileUrl">
+    <p>Сценарій завантажений.</p>
+    <button class="download-btn" @click="downloadScript">Скачати сценарій</button>
+    <button class="delete-btn" @click="deleteScript">Видалити сценарій</button>
+  </div>
+  <!-- Если сценарій не загружен, предлагаем загрузить -->
+  <div v-else>
+    <input type="file" @change="handleFileUpload" />
+    <button class="upload-btn" @click="uploadScript">Завантажити сценарій</button>
+  </div>
+
+    <!-- Сообщение об ошибке (если есть) -->
+    <div v-if="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  </div>
+
     </main>
     <main v-else>
       <p>Завантаження інформації про фільм...</p>
@@ -177,6 +208,8 @@ export default {
       showFinanceUpdateForm: false,
       showFinanceUpdateForm: false,
       showFilmEditForm: false,
+      errorMessage: "",
+      selectedFile: null, // для хранения выбранного файла сценария
       newFilmData: null, // для новой информации о фильме (при создании уже фильма здесь не нужен)
       // Для редактирования фильма – новые данные
       showShootingDayForm: false,
@@ -259,6 +292,11 @@ export default {
     }
 },
   methods: {
+    handleFileUpload(event) {
+    const file = event.target.files[0];
+    this.selectedFile = file;
+    console.log("Вибраний файл:", file);
+  },
     async fetchFilmDetails() {
       try {
         const filmId = this.$route.params.id;
@@ -335,6 +373,7 @@ export default {
       equipmentCost: ""
     };
     this.showFinanceForm = false;
+    this.errorMessage = "";
 
     // 1) Тут делаем повторный запрос, чтобы обновить локальный объект film
     await this.fetchFilmDetails();
@@ -344,6 +383,7 @@ export default {
     
   } catch (error) {
     console.error("Помилка при створенні фінансів:", error);
+    this.errorMessage = error.response && error.response.data ? error.response.data : "Сталася помилка при створенні фінансів";
   }
 },
     cancelFinance() {
@@ -387,7 +427,9 @@ export default {
         // В этом примере предполагаем, что обновление успешно и обновляем локально:
         this.film.finance = { ...financeData, id: financeId }; // сохраняем id, чтобы не потерять его
         this.showFinanceUpdateForm = false;
+        this.errorMessage = "";
       } catch (error) {
+        this.errorMessage = error.response && error.response.data ? error.response.data : "Сталася помилка при оновленні фінансів";
         console.error("Помилка при оновленні фінансів:", error);
       }
     },
@@ -499,9 +541,68 @@ export default {
     }
   },
 
+
     goToUserPage() {
       this.$router.push("/user-profile");
-    }
+    },
+
+    goToCreateCasting() {
+      // this.film.id — это id вашего фильма
+      this.$router.push({ name: 'CastingPanel', params: { movieId: this.film.id } });
+    },
+  async uploadScript() {
+      if (!this.selectedFile) {
+        this.errorMessage = "Оберіть файл для завантаження.";
+        return;
+      }
+      try {
+        this.errorMessage = "";
+        const token = this.token;
+        const formData = new FormData();
+        formData.append("file", this.selectedFile);
+  
+        const movieId = this.film && this.film.id ? this.film.id : (this.filmId || null);
+        if (!movieId) {
+          this.errorMessage = "Не знайдено filmId для завантаження сценарію.";
+          return;
+        }
+  
+        console.log("Загружаємо сценарій для movieId:", movieId);
+  
+        const response = await axios.post(`/Script/uploadScriptMovie/${movieId}`, formData, {
+          headers: {
+            'Authorization': 'Bearer ' + token
+            // Не указываем 'Content-Type', чтобы браузер сам установил его с boundary
+          }
+        });
+        console.log("Сценарій завантажено, URL:", response.data);
+        // Можно обновить film или сообщить об успехе
+      } catch (error) {
+        console.error("Помилка завантаження сценарію:", error);
+        this.errorMessage = error.response && error.response.data
+                            ? error.response.data
+                            : "Помилка завантаження сценарію.";
+      }
+    },  downloadScript() {
+      // Если бекенд возвращает прямой URL для скачивания
+      window.open(`/Script/downloadScript/${this.filmId}`, "_blank");
+    },
+    async deleteScript() {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.delete(`/Script/deleteScript/${this.filmId}`, {
+          headers: {
+            'Authorization': 'Bearer ' + token
+          }
+        });
+        console.log("Сценарій видалено:", response.data);
+        this.$emit('scriptDeleted');
+      } catch (error) {
+        console.error("Помилка видалення сценарію:", error);
+        this.errorMessage = error.response && error.response.data ? error.response.data : "Помилка видалення сценарію.";
+      }
+  
+  },
   },
   mounted() {
     this.fetchFilmDetails();
@@ -509,6 +610,7 @@ export default {
 };
 </script>
 <style scoped>
+/* Общий фон и стили страницы */
 .dashboard-container {
   background-color: #0e1117;
   color: #fff;
@@ -517,6 +619,7 @@ export default {
   font-family: 'Segoe UI', sans-serif;
 }
 
+/* Хедер и аватар */
 header {
   display: flex;
   justify-content: space-between;
@@ -533,13 +636,10 @@ header {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: white;
+  color: #fff;
 }
 
-.section {
-  margin-bottom: 30px;
-}
-
+/* Секции и блоки */
 .section-block {
   background-color: #1c1f26;
   border: 1px solid #2a2d34;
@@ -550,44 +650,16 @@ header {
 }
 
 .section-block h2 {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  color: #fff;
 }
 
 .section-block p {
   margin: 5px 0;
+  color: #ccc;
 }
 
-.edit-film-btn {
-  background-color: #4fa3ff;
-  color: #fff;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.edit-film-btn:hover {
-  background-color: #357acc;
-}
-
-.add-finance-btn,
-.edit-finance-btn {
-  background-color: #3a3d45;
-  color: #fff;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.add-finance-btn:hover,
-.edit-finance-btn:hover {
-  background-color: #4b4e57;
-}
-
-.finance-form input,
+/* Форма редактирования фильма */
 .edit-film-form input,
 .edit-film-form select {
   display: block;
@@ -595,99 +667,58 @@ header {
   margin: 10px 0;
   padding: 10px;
   background-color: #2d2f36;
-  border: none;
+  border: 1px solid #444;
   color: #fff;
   border-radius: 5px;
 }
 
-.form-buttons {
-  display: flex;
-  justify-content: space-between;
-}
-
-.form-buttons button {
-  background-color: #3a3d45;
+/* Кнопки для редактирования фильма */
+.edit-film-btn {
+  background-color: #3c3e47;
+  color: #fff;
   border: none;
   padding: 8px 12px;
   border-radius: 5px;
-  color: white;
   cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
 }
 
-.form-buttons button:hover {
-  background-color: #4b4e57;
+.edit-film-btn:hover {
+  background-color: #4a4d57;
 }
-.shooting-day {
-  position: relative;
-  margin-bottom: 10px;
+
+/* Кнопки для финансов (создание, редактирование) */
+.add-finance-btn,
+.edit-finance-btn {
+  background-color: #3c3e47;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.add-finance-btn:hover,
+.edit-finance-btn:hover {
+  background-color: #4a4d57;
+}
+
+/* Стили для форм финансов */
+.finance-form input {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
   padding: 10px;
   background-color: #2d2f36;
+  border: 1px solid #444;
+  color: #fff;
   border-radius: 5px;
 }
-.delete-day-btn {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background-color: #ff4d4d;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 3px;
-  color: white;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-.delete-day-btn:hover {
-  background-color: #e60000;
-}
-/* Стили для всего блока съемочных дней */
-.section-block {
-  background-color: #1c1f26;
-  border: 1px solid #2a2d34;
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 20px;
-  width: 100%;
-}
 
-/* Заголовок блока */
-.section-block h2 {
-  margin-bottom: 15px;
-}
-
-/* Стили для формы создания и редактирования съёмочного дня (тёмная версия) */
-.day-form,
-.edit-shooting-day-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  background-color: #2d2f36; /* тёмный фон для формы */
-  padding: 16px;
-  margin-bottom: 16px;
-  border-radius: 12px;
-  /* Можно добавить лёгкую тень, но в тёмном оформлении её стоит уменьшить: */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-/* Метки (label) для полей — светлый текст */
-.day-form label,
-.edit-shooting-day-form label {
-  font-size: 14px;
-  color: #ddd;
-}
-
-/* Стили для инпутов в форме — темный фон, светлый текст */
-.day-form input,
-.edit-shooting-day-form input {
-  padding: 10px 12px;
-  font-size: 15px;
-  border: 1px solid #444;
-  border-radius: 8px;
-  width: 100%;
-  background-color: #1e2128;
-  color: #fff;
-}
-
-/* Кнопки формы — оптимизированы для тёмного оформления */
+/* Общий стиль кнопок в формах */
 .form-buttons {
   display: flex;
   justify-content: flex-end;
@@ -704,20 +735,18 @@ header {
   transition: background-color 0.3s;
 }
 
-/* Кнопка сохранения */
+/* Кнопки сохранения/отмены */
 .form-buttons button:first-child {
   background-color: #4caf50;
 }
 .form-buttons button:first-child:hover {
-  background-color: #45a049;
+  background-color: #43a047;
 }
-
-/* Кнопка отмены */
 .form-buttons button:last-child {
-  background-color: #d9534f;
+  background-color: #d32f2f;
 }
 .form-buttons button:last-child:hover {
-  background-color: #c9302c;
+  background-color: #c62828;
 }
 
 /* Стили для карточек съёмочного дня */
@@ -730,25 +759,14 @@ header {
   position: relative;
 }
 
-/* Текст карточки — можно сделать чуть светлее */
 .shooting-day p {
   margin: 4px 0;
   color: #ccc;
 }
 
-/* Стили для кнопок редактирования и удаления дня */
-.edit-day-btn,
-.delete-day-btn {
-  padding: 6px 12px;
-  font-size: 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  border: none;
-  margin-right: 10px;
-}
-/* Кнопка редактирования (ранее была жёлтой #ffc107) */
+/* Кнопки для редактирования и удаления съёмочного дня */
 .edit-day-btn {
-  background-color: #52555c; /* Тёмный серо-синий фон */
+  background-color: #3a3f47;
   color: #fff;
   border: none;
   padding: 6px 12px;
@@ -759,19 +777,26 @@ header {
   transition: background-color 0.3s;
 }
 .edit-day-btn:hover {
-  background-color: #60636a; /* При наведении чуть светлее */
-}
-.delete-day-btn {
-  background-color: #c0392b; /* Тёмно-красный */
-  color: #fff;
-}
-.delete-day-btn:hover {
-  background-color: #a93226; /* При наведении ещё темнее */
+  background-color: #474a55;
 }
 
-/* Кнопка добавления нового дня (подгоняем для тёмной темы) */
+.delete-day-btn {
+  background-color: #9b1d20;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.delete-day-btn:hover {
+  background-color: #851519;
+}
+
+/* Кнопка добавления нового дня */
 .add-day-btn {
-  background-color: #3a3d45; /* Тёмно-серый фон */
+  background-color: #3c3e47;
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -779,8 +804,116 @@ header {
   cursor: pointer;
   margin-bottom: 16px;
   display: block;
+  transition: background-color 0.3s;
 }
 .add-day-btn:hover {
-  background-color: #2980b9;
+  background-color: #4a4d57;
+}
+
+/* Стили для форм создания/редактирования съёмочного дня (тёмная версия) */
+.day-form,
+.edit-shooting-day-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #2d2f36;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Метки для полей формы */
+.day-form label,
+.edit-shooting-day-form label {
+  font-size: 14px;
+  color: #ddd;
+}
+
+/* Стили для инпутов в форме съёмочного дня */
+.day-form input,
+.edit-shooting-day-form input {
+  padding: 10px 12px;
+  font-size: 15px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  width: 100%;
+  background-color: #1e2128;
+  color: #fff;
+}
+
+/* Стили для блока сценария */
+.script-section {
+  background-color: #1c1f26;
+  border: 1px solid #2a2d34;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.script-section h2 {
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+/* Стили для input типа file */
+input[type="file"] {
+  color: #fff;
+  background-color: #2d2f36;
+  border: 1px solid #444;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+/* Стили для кнопок сценария */
+.upload-btn,
+.download-btn,
+.delete-btn {
+  background-color: #3c3e47;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.3s;
+}
+
+.upload-btn:hover,
+.download-btn:hover {
+  background-color: #4a4d57;
+}
+
+.delete-btn {
+  background-color: #9b1d20;
+}
+
+.delete-btn:hover {
+  background-color: #851519;
+}
+
+/* Сообщение об ошибке */
+.error-message {
+  background-color: #e74c3c;
+  color: #fff;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.add-casting-btn {
+  background-color: #3a3d45;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+.add-casting-btn:hover {
+  background-color: #4b4e57;
 }
 </style>

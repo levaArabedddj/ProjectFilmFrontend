@@ -1,33 +1,36 @@
 <template>
-  <div class="flex justify-center items-center min-h-screen bg-gray-100">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-      <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">🎬 Вход в систему</h2>
+  <div class="page-container">
+    <div class="login-card">
+      <h2>🎬 Вход в систему</h2>
 
       <FormKit
-  type="text"
-  label="Ім'я користувача"
-  v-model="credentials.userName"
-  validation="required"
-/>
+        type="text"
+        label="Ім'я користувача"
+        v-model="credentials.userName"
+        validation="required"
+        classes="input-field"
+      />
 
-<FormKit
-  type="password"
-  label="Пароль"
-  v-model="credentials.password"
-  validation="required"
-/>
-<FormKit
-  type="submit"
-  label="Увійти"
-  @click.prevent="handleLogin"
-  classes="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300 w-full mt-4"
-/>
+      <FormKit
+        type="password"
+        label="Пароль"
+        v-model="credentials.password"
+        validation="required"
+        classes="input-field"
+      />
 
+      <FormKit
+        type="submit"
+        label="Увійти"
+        @click.prevent="handleLogin"
+        classes="btn-submit"
+      />
 
-
-      <p class="text-center mt-5 text-gray-600">
+      <p class="bottom-text">
         Нет аккаунта?
-        <router-link to="/register" class="text-blue-500 hover:underline">Зарегистрироваться</router-link>
+        <router-link to="/register" class="link">
+          Зарегистрироваться
+        </router-link>
       </p>
     </div>
   </div>
@@ -97,4 +100,62 @@
 
   </script>
   
+  <style scoped>
+.page-container {
+  background-color: #0e1117;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+.login-card {
+  background-color: #1c1f26;
+  border: 1px solid #2a2d34;
+  border-radius: 12px;
+  padding: 40px 30px;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+.login-card h2 {
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+  text-align: center;
+}
+.input-field {
+  width: 100%;
+  margin-bottom: 20px;
+  --fk-border: 1px solid #2a2d34;
+  --fk-bg: #0e1117;
+  --fk-color: #fff;
+  --fk-placeholder: #777;
+}
+.btn-submit {
+  width: 100%;
+  background-color: #2a2d34;
+  color: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: box-shadow .3s, transform .2s;
+}
+.btn-submit:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  transform: translateY(-2px);
+}
+.bottom-text {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  text-align: center;
+  color: #ccc;
+}
+.link {
+  color: #68b0f1;
+  text-decoration: underline;
+}
+</style>
   

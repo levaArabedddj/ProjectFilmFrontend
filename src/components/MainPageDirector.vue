@@ -8,50 +8,67 @@
       </header>
   
       <main>
-        <div v-if="loading" class="loading">Завантаження...</div>
-        <div v-else-if="films.length === 0" class="empty">Фільмів поки немає</div>
-        <div v-else class="films-list">
-
-        <!-- Контейнер для создания нового фильма -->
-        <div class="film-card create-new" @click="showCreateForm = true" v-if="!showCreateForm">
-          <h2>+ Додати новий фільм</h2>
-        </div>
-
-        <!-- Форма создания фильма -->
-        <div class="film-card create-form" v-if="showCreateForm">
-          <input v-model="newFilm.title" placeholder="Назва фільму" />
-          <input v-model="newFilm.description" placeholder="Опис" />
-           <!-- Выпадающий список для выбора жанра -->
-           <select v-model="newFilm.genre_film">
-            <option disabled value="">Оберіть жанр</option>
-            <option v-for="genre in genres" :key="genre.value" :value="genre.value">
-              {{ genre.label }}
-            </option>
-          </select>
-          <div class="form-buttons">
-            <button @click="createFilm">Створити</button>
-            <button @click="cancelCreate">Скасувати</button>
+      <div v-if="loading" class="loading">Завантаження...</div>
+      <div v-else>
+        <!-- Один флекс‑контейнер для всего: и кнопки “+”, и формы, и существующих фильмов -->
+        <div class="films-list">
+          
+          <!-- Кнопка “+” -->
+          <div
+            v-if="!showCreateForm"
+            class="film-card create-new"
+            @click="showCreateForm = true"
+          >
+            <h2>+ Додати новий фільм</h2>
           </div>
-        </div>
 
-            <div
-                class="film-card"
-                  v-for="film in films"
-                    :key="film.id"
-                 @click="openFilm(film.id)"
->
-                <h2>{{ film.title }}</h2>
-                 <p>{{ film.description }}</p>
-            <p v-if="film.genre_film">Жанр: {{ film.genre_film }}</p>
-            <!-- Кнопка удаления фильма.
-               При клике, событие не всплывает (stopPropagation), чтобы не открывалась карточка -->
-          <button class="delete-film-btn" @click.stop="deleteFilm(film.id)">Видалити</button>
+          <!-- Форма создания -->
+          <div v-if="showCreateForm" class="film-card create-form">
+            <input v-model="newFilm.title" placeholder="Назва фільму" />
+            <input v-model="newFilm.description" placeholder="Опис" />
+            <select v-model="newFilm.genre_film">
+              <option disabled value="">Оберіть жанр</option>
+              <option
+                v-for="genre in genres"
+                :key="genre.value"
+                :value="genre.value"
+              >
+                {{ genre.label }}
+              </option>
+            </select>
+            <div class="form-buttons">
+              <button @click="createFilm">Створити</button>
+              <button @click="cancelCreate">Скасувати</button>
             </div>
+          </div>
+
+          <!-- Если нет фильмов, показываем пустой статус внутри того же флекса -->
+          <div v-if="films.length === 0" class="empty">Фільмів поки немає</div>
+
+          <!-- Существующие фильмы -->
+          <div
+            v-else
+            v-for="film in films"
+            :key="film.id"
+            class="film-card"
+            @click="openFilm(film.id)"
+          >
+            <h2>{{ film.title }}</h2>
+            <p>{{ film.description }}</p>
+            <p v-if="film.genre_film">Жанр: {{ film.genre_film }}</p>
+            <button
+              class="delete-film-btn"
+              @click.stop="deleteFilm(film.id)"
+            >
+              Видалити
+            </button>
+          </div>
 
         </div>
-      </main>
-    </div>
-  </template>
+      </div>
+    </main>
+  </div>
+</template>
   
   <script>
 import axios from 'axios';

@@ -1,55 +1,109 @@
 <template>
-  <div class="flex justify-center items-center min-h-screen bg-purple-700">
-    <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full">
-      <h2 class="text-2xl font-bold text-center mb-6 text-gray-900">Регистрация</h2>
+  <div class="page-container">
+    <div class="login-card">
+      <h2>📝 Регистрация</h2>
 
-      <div class="form-container bg-purple-600 p-6 rounded-xl">
-        <FormKit type="form" @submit="handleSubmit">
-          <FormKit type="text" label="Имя пользователя" v-model="user.userName" validation="required" />
-          <FormKit type="email" label="Gmail" v-model="user.gmail" validation="required|email" />
-          
-          <FormKit type="select" label="Роль" v-model="user.role" validation="required">
-            <option value="ACTOR">Актёр</option>
-            <option value="CREW_MEMBER">Член команды</option>
-            <option value="ADMIN">Администратор</option>
-            <option value="DIRECTOR">Режиссёр</option>
-            <option value="VISITOR">Посетитель</option>
-          </FormKit>
-
-          <FormKit type="password" label="Пароль" v-model="user.password" validation="required|min:6" />
-          <FormKit type="text" label="Имя" v-model="user.name" validation="required" />
-          <FormKit type="text" label="Фамилия" v-model="user.surName" validation="required" />
-
-          <FormKit type="select" label="Пол" v-model="user.gender" validation="required">
-            <option value="MALE">Мужской</option>
-            <option value="FEMALE">Женский</option>
-          </FormKit>
-
-          <FormKit type="tel" label="Телефон" v-model="user.phone" validation="required" />
-
-          <FormKit type="submit" label="Зарегистрироваться" classes="bg-purple-800 text-white p-2 rounded-lg hover:bg-purple-900 w-full mt-4 transition-all duration-300" />
+      <FormKit type="form" @submit="handleSubmit">
+        <FormKit
+          type="text"
+          label="Имя пользователя"
+          v-model="user.userName"
+          validation="required"
+          classes="input-field"
+        />
+        <FormKit
+          type="email"
+          label="Gmail"
+          v-model="user.gmail"
+          validation="required|email"
+          classes="input-field"
+        />
+        <FormKit
+          type="select"
+          label="Роль"
+          v-model="user.role"
+          validation="required"
+          classes="input-field"
+        >
+          <option value="ACTOR">Актёр</option>
+          <option value="CREW_MEMBER">Член команды</option>
+          <option value="ADMIN">Администратор</option>
+          <option value="DIRECTOR">Режиссёр</option>
+          <option value="VISITOR">Посетитель</option>
         </FormKit>
-      </div>
+        <FormKit
+          type="password"
+          label="Пароль"
+          v-model="user.password"
+          validation="required|min:6"
+          classes="input-field"
+        />
+        <FormKit
+          type="text"
+          label="Имя"
+          v-model="user.name"
+          validation="required"
+          classes="input-field"
+        />
+        <FormKit
+          type="text"
+          label="Фамилия"
+          v-model="user.surName"
+          validation="required"
+          classes="input-field"
+        />
+        <FormKit
+          type="select"
+          label="Пол"
+          v-model="user.gender"
+          validation="required"
+          classes="input-field"
+        >
+          <option value="MALE">Мужской</option>
+          <option value="FEMALE">Женский</option>
+        </FormKit>
+        <FormKit
+          type="tel"
+          label="Телефон"
+          v-model="user.phone"
+          validation="required"
+          classes="input-field"
+        />
 
-      <p class="mt-4 text-sm text-center text-white">
+        <FormKit
+          type="submit"
+          label="Зарегистрироваться"
+          @click.prevent="handleSubmit"
+          classes="btn-submit"
+        />
+      </FormKit>
+
+      <p class="bottom-text">
         Уже есть аккаунт?
-        <router-link to="/login" class="text-blue-300 hover:underline">Войти</router-link>
+        <router-link to="/login" class="link">Войти</router-link>
       </p>
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import api from "../api"; // Подключение API
+import { useAuthStore } from "../store/auth";    // <-- импортируем store
+import api from "../api";
+// Вариант A: именованный импорт «по‑умолчанию»
+import { jwtDecode } from "jwt-decode";
+
+
 
 const router = useRouter();
+const authStore = useAuthStore();
 
 const user = ref({
   userName: "",
   gmail: "",
   password: "",
-  role: "USER",
+  role: "ROLE_VISITOR",  // значение по умолчанию
   name: "",
   surName: "",
   gender: "MALE",
@@ -57,30 +111,57 @@ const user = ref({
 });
 
 const handleSubmit = async () => {
-  if (!user.value.userName || !user.value.gmail || !user.value.password || !user.value.role || !user.value.name || !user.value.surName || !user.value.phone) {
-    alert("Заполните все поля!");
-    return;
+  // простая валидация
+  for (const key in user.value) {
+    if (!user.value[key]) {
+      alert("Заполните все поля!");
+      return;
+    }
   }
-
   if (user.value.password.length < 6) {
     alert("Пароль должен быть не менее 6 символов!");
     return;
   }
 
   try {
-    const response = await api.post("auth/signup-Login", user.value, {
-      headers: { "Content-Type": "application/json" },
-      responseType: "text",
-    });
+    const response = await api.post(
+      "auth/signup-Login",
+      user.value,
+      {
+        headers: { "Content-Type": "application/json" },
+        responseType: "text",
+      }
+    );
 
-    if (typeof response.data === "string") {
-      localStorage.setItem("authToken", response.data);
-    } else if (response.data && response.data.token) {
-      localStorage.setItem("authToken", response.data.token);
+    // предполагаем, что response.data — это строковый JWT
+    const token = typeof response.data === "string"
+      ? response.data
+      : response.data.token;
+
+    // сохраняем токен в Zustand/Vuex/Pinia
+    authStore.setToken(token);
+
+    // декодируем токен и вытаскиваем роли
+    const decoded = jwtDecode(token);
+    const roles = decoded.roles || [];
+
+    // выбираем путь редиректа
+    let redirectPath = "/dashboard";
+    if (roles.includes("ROLE_DIRECTOR")) {
+      redirectPath = "/main-page-director";
+    } else if (roles.includes("ROLE_ACTOR")) {
+      redirectPath = "/actor-dashboard";
+    } else if (roles.includes("ROLE_CREW_MEMBER")) {
+      redirectPath = "/crew-dashboard";
+    } else if (roles.includes("ROLE_ADMIN")) {
+      redirectPath = "/admin-dashboard";
+    } else if (roles.includes("ROLE_VISITOR")) {
+      redirectPath = "/visitor-home";
     }
 
     alert("Успешная регистрация!");
-    router.push("/dashboard"); // Перенаправление
+    router.push(redirectPath);
+
   } catch (error) {
     console.error("Ошибка регистрации:", error);
     alert(`Ошибка: ${error.response?.status || "Неизвестная"} ${error.response?.data || ""}`);
@@ -89,21 +170,60 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-.form-container {
+.page-container {
+  background-color: #0e1117;
+  color: #fff;
+  min-height: 100vh;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #7e3f9f; /* фиолетовый фон */
-  padding: 2rem;
-  border-radius: 1rem;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
 }
-
-.form-container .FormKit {
-  margin-bottom: 16px;
+.login-card {
+  background-color: #1c1f26;
+  border: 1px solid #2a2d34;
+  border-radius: 12px;
+  padding: 40px 30px;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
 }
-
-.bg-purple-800 {
-  background-color: #5a1d91;
+.login-card h2 {
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+  text-align: center;
+}
+.input-field {
+  width: 100%;
+  margin-bottom: 20px;
+  --fk-border: 1px solid #2a2d34;
+  --fk-bg: #0e1117;
+  --fk-color: #fff;
+  --fk-placeholder: #777;
+}
+.btn-submit {
+  width: 100%;
+  background-color: #2a2d34;
+  color: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: box-shadow .3s, transform .2s;
+}
+.btn-submit:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  transform: translateY(-2px);
+}
+.bottom-text {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  text-align: center;
+  color: #ccc;
+}
+.link {
+  color: #68b0f1;
+  text-decoration: underline;
 }
 </style>

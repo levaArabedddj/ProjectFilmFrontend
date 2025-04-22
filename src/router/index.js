@@ -22,13 +22,9 @@ const routes = [
   { path: "/crew-dashboard", component: CrewDashboard, meta: { role: "CREW_MEMBER" } },
   { path: "/main-page-director", component: MainPageDirector },
   { path: '/casting/create/:movieId', name: 'CreateCasting', component: CreateCasting, props: true}, // Добавили маршрут для создания кастинга
-  {
-    path: '/casting/dashboard/:movieId',
-    name: 'CastingPanel',
-    component: CastingPanel,
-    props: true,
-    meta: { role: 'DIRECTOR' }
-  },
+  { path: '/casting/dashboard/:movieId', name: 'CastingPanel', component: CastingPanel, props: true, meta: { role: 'DIRECTOR' }}, 
+  {path: '/movies/:movieId/castings',name: 'CastingList',component: () => import('@/components/CastingList.vue')},
+  
 ];
 
 

@@ -11,6 +11,7 @@ import Home from '@/views/Home.vue'; // Добавили главную стра
 import MainPageDirector from '@/components/MainPageDirector.vue';
 import CreateCasting from '@/components/CreateCasting.vue' 
 import CastingPanel from '@/page/CastingPanel.vue';
+import CastingApplications from "@/components/CastingApplications.vue";
 
 const routes = [
   { path: '/', component: Home }, // Главная страница
@@ -24,6 +25,12 @@ const routes = [
   { path: '/casting/create/:movieId', name: 'CreateCasting', component: CreateCasting, props: true}, // Добавили маршрут для создания кастинга
   { path: '/casting/dashboard/:movieId', name: 'CastingPanel', component: CastingPanel, props: true, meta: { role: 'DIRECTOR' }}, 
   {path: '/movies/:movieId/castings',name: 'CastingList',component: () => import('@/components/CastingList.vue')},
+  {
+    path: "/applications/:filmId/:castingId",
+    name: "CastingApplications",
+    component: CastingApplications,
+    props: true
+  },
   
 ];
 

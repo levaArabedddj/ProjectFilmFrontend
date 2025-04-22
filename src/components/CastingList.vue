@@ -13,7 +13,10 @@
       </div>
   
       <div v-else class="casting-grid">
-        <div v-for="c in castings" :key="c.id" class="casting-card">
+        <div v-for="c in castings" :key="c.id" 
+          class="casting-card clickable"
+       @click="goToApplications(c.id)">
+
           <h3>{{ c.roleName }}</h3>
           <p>{{ c.description }}</p>
           <p><strong>Требования:</strong> {{ c.requirements }}</p>
@@ -62,11 +65,29 @@
           this.loading = false;
         }
       },
+      goToApplications(castingId) {
+     // Переходим на маршрут /applications/:filmId/:castingId
+     this.$router.push({
+       name: "CastingApplications",
+       params: {
+         filmId: this.movieId,
+         castingId: castingId,
+       },
+    });
+   },
     },
   };
   </script>
   
   <style scoped>
+
+.casting-card.clickable {
+  cursor: pointer;
+}
+.casting-card.clickable:hover {
+  box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+  transform: translateY(-3px);
+}
   .page-container {
     background-color: #0e1117;
     color: #fff;

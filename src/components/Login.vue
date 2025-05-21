@@ -44,6 +44,7 @@
   import api from "../api"; 
   import { jwtDecode } from "jwt-decode";
   import { FormKit } from "@formkit/vue";
+  import axios from 'axios';
   
   const router = useRouter();
   const authStore = useAuthStore(); // Получаем хранилище

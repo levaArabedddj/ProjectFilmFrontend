@@ -93,6 +93,7 @@ import { useAuthStore } from "../store/auth";    // <-- импортируем s
 import api from "../api";
 // Вариант A: именованный импорт «по‑умолчанию»
 import { jwtDecode } from "jwt-decode";
+import axios from 'axios';
 
 
 

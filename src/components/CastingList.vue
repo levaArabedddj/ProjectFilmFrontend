@@ -53,7 +53,7 @@
         try {
           const token = localStorage.getItem("token");
           const resp = await axios.get(
-            `/casting/allCastingsMovie/${this.movieId}`,
+            `https://film-no9d.onrender.com/casting/allCastingsMovie/${this.movieId}`,
             { headers: { Authorization: `Bearer ${token}` } }
           );
           this.castings = resp.data;

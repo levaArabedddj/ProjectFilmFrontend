@@ -198,6 +198,9 @@
 
 <script>
 import axios from 'axios';
+
+
+axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 export default {
   name: "DirectorDashboard",
   data() {
@@ -301,7 +304,7 @@ export default {
       try {
         const filmId = this.$route.params.id;
         console.log("filmId:", filmId);
-        const response = await axios.get(`/Film/getMovieById/${filmId}`, {
+        const response = await axios.get(`https://film-no9d.onrender.com/Film/getMovieById/${filmId}`, {
           headers: {
             'Authorization': 'Bearer ' + this.token
           }
@@ -318,7 +321,7 @@ export default {
     async updateFilmData() {
       try {
         const filmId = this.film.id;
-        const response = await axios.post(`/Film/update_movie/${filmId}`, this.updatedFilm, {
+        const response = await axios.post(`https://film-no9d.onrender.com/Film/update_movie/${filmId}`, this.updatedFilm, {
           headers: {
             'Authorization': 'Bearer ' + this.token
           }
@@ -356,7 +359,7 @@ export default {
     async createFinance() {
   try {
     const filmId = this.film.id;
-    const response = await axios.post(`/Finance/createFinance/${filmId}`, this.newFinance, {
+    const response = await axios.post(`https://film-no9d.onrender.com/Finance/createFinance/${filmId}`, this.newFinance, {
       headers: {
         'Authorization': 'Bearer ' + this.token
       }
@@ -416,7 +419,7 @@ export default {
          // Создаем копию объекта без поля id
     const { id, ...financeData } = this.updateFinance;
 
-        const response = await axios.put(`/Finance/updateFinance/${filmId}/${financeId}`, financeData, {
+        const response = await axios.put(`https://film-no9d.onrender.com/Finance/updateFinance/${filmId}/${financeId}`, financeData, {
           headers: {
             'Authorization': 'Bearer ' + this.token
           }
@@ -447,7 +450,7 @@ export default {
     async createShootingDay() {
     try {
       const filmId = this.film.id;
-      const response = await axios.post(`/ShootingDay/create_shootingDay/${filmId}`, this.newShootingDay, {
+      const response = await axios.post(`https://film-no9d.onrender.com/ShootingDay/create_shootingDay/${filmId}`, this.newShootingDay, {
         headers: {
           'Authorization': 'Bearer ' + this.token
         }
@@ -485,7 +488,7 @@ export default {
           const filmId = this.film.id;
           const token = localStorage.getItem("token");
           // Отправляем DELETE-запрос
-          const response = await axios.delete(`/ShootingDay/delete/shootingDay/${filmId}/${shootingDayId}`, {
+          const response = await axios.delete(`https://film-no9d.onrender.com/ShootingDay/delete/shootingDay/${filmId}/${shootingDayId}`, {
             headers: {
               'Authorization': 'Bearer ' + token
             }
@@ -526,7 +529,7 @@ export default {
       const token = localStorage.getItem("token");
       // Отправляем PUT‑запрос с обновлёнными полями (формат JSON Map<String, Object>)
       const updates = { ...this.editedShootingDay }; // Можно дополнительно удалить лишние свойства, если они есть
-      const response = await axios.put(`/ShootingDay/update/shootingDay/${filmId}/${shootingDayId}`, updates, {
+      const response = await axios.put(`https://film-no9d.onrender.com/ShootingDay/update/shootingDay/${filmId}/${shootingDayId}`, updates, {
         headers: {
           'Authorization': 'Bearer ' + token
         }

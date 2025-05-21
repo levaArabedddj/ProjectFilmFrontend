@@ -13,6 +13,7 @@ import CreateCasting from '@/components/CreateCasting.vue'
 import CastingPanel from '@/page/CastingPanel.vue';
 import CastingApplications from "@/components/CastingApplications.vue";
 
+
 const routes = [
   { path: '/', component: Home }, // Главная страница
   { path: '/register', name: 'Register', component: Register },

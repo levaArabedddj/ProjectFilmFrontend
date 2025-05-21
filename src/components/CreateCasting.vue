@@ -110,7 +110,7 @@
         // Отправляем N отдельных запросов
         await Promise.all(this.forms.map(f =>
           axios.post(
-            `/casting/create/${this.movieId}`,
+            `https://film-no9d.onrender.com/casting/create/${this.movieId}`,
             f,
             { headers: { Authorization: 'Bearer ' + token } }
           )

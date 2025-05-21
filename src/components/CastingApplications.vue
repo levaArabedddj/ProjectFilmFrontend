@@ -76,7 +76,7 @@ export default {
       this.error = false;
       try {
         const token = localStorage.getItem("token");
-        const url = `/casting/applications/${this.filmId}/${this.castingId}`;
+        const url = `https://film-no9d.onrender.com/casting/applications/${this.filmId}/${this.castingId}`;
         const resp = await axios.get(url, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -103,7 +103,7 @@ export default {
       try {
         const token = localStorage.getItem("token");
         await axios.put(
-          `/casting/review/${applicationId}`,
+          `https://film-no9d.onrender.com/casting/review/${applicationId}`,
           { status: newStatus, feedback },
           { headers: { Authorization: `Bearer ${token}` } }
         );

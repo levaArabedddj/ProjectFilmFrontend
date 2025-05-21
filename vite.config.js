@@ -6,7 +6,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
-  server: {
+ /*server: {
     proxy: {
       '/auth': { // ✅ Должно соответствовать API-бэкенду
         target: 'http://localhost:8080/',
@@ -37,9 +37,9 @@ export default defineConfig({
       target:'http://localhost:8080/',
       changeOrigin: true,
       secure: false
+    },
     }
-    }
-  }, 
+  }, */
   plugins: [
     vue(),
     vueDevTools(),

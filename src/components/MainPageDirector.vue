@@ -66,13 +66,15 @@
 
         </div>
       </div>
+      <router-link to="/chat">Перейти в чат</router-link>
+
     </main>
   </div>
 </template>
   
   <script>
-import axios from 'axios';
 
+  
 export default {
   name: "DirectorFilms",
   data() {
@@ -121,7 +123,7 @@ export default {
         // Получаем токен из localStorage
         const token = localStorage.getItem("token");
         // Отправляем запрос с заголовком Authorization
-        const response = await axios.get('/Film/getAllFilms', { // важная часть для получения данных и их отправки !!
+        const response = await axios.get('https://film-no9d.onrender.com/Film/getAllFilms', { // важная часть для получения данных и их отправки !!
           headers: {
             'Authorization': 'Bearer ' + token
           }
@@ -137,7 +139,7 @@ export default {
     async createFilm() {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.post('/Film/create_movie', this.newFilm, {
+        const response = await axios.post('https://film-no9d.onrender.com/Film/create_movie', this.newFilm, {
           headers: {
             'Authorization': 'Bearer ' + token
           }
@@ -161,7 +163,7 @@ export default {
       try {
         const token = localStorage.getItem("token");
         // Отправляем DELETE-запрос
-        const response = await axios.delete(`/Film/DeleteFilm/${filmId}`, {
+        const response = await axios.delete(`https://film-no9d.onrender.com/Film/DeleteFilm/${filmId}`, {
           headers: {
             'Authorization': 'Bearer ' + token
           }

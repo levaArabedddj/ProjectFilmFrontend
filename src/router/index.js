@@ -31,7 +31,12 @@ const routes = [
     name: "CastingApplications",
     component: CastingApplications,
     props: true
-  },
+  },{
+  path: '/oauth2/callback',
+  name: 'OAuth2Callback',
+  component: () => import('@/components/OAuth2Callback.vue')
+}
+
   
 ];
 

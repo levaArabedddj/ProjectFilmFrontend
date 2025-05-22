@@ -21,6 +21,12 @@
         <div class="buttons">
           <router-link to="/signin" class="btn login">Войти</router-link>
           <router-link to="/register" class="btn register">Зарегистрироваться</router-link>
+          <a
+      class="btn google"
+      href="https://film-no9d.onrender.com/oauth2/authorization/google"
+    >
+      Войти через Google
+    </a>
         </div>
       </div>
       
@@ -157,5 +163,19 @@ p {
   transform: translateX(-50%);
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.8);
+}
+
+.btn.google {
+  background: #db4437;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  display: inline-block;
+  margin-left: 10px;
+}
+.btn.google:hover {
+  background: #c23321;
 }
 </style>

@@ -12,7 +12,7 @@ import MainPageDirector from '@/components/MainPageDirector.vue';
 import CreateCasting from '@/components/CreateCasting.vue' 
 import CastingPanel from '@/page/CastingPanel.vue';
 import CastingApplications from "@/components/CastingApplications.vue";
-
+import OAuth2Callback from '@/components/OAuth2Callback.vue';
 
 const routes = [
   { path: '/', component: Home }, // Главная страница
@@ -34,8 +34,8 @@ const routes = [
   },{
   path: '/oauth2/callback',
   name: 'OAuth2Callback',
-  component: () => import('@/components/OAuth2Callback.vue')
-}
+   component: OAuth2Callback
+},
 
   
 ];
